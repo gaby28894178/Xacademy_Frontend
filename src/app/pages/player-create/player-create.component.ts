@@ -127,16 +127,16 @@ export class PlayerCreateComponent {
     nationality: [''],
     club: [''],
     positions: [''],
-    age: [null as number | null, [Validators.min(15), Validators.max(50)]],
+    age: [null as number | null],
     overall: [null as number | null, [Validators.min(1), Validators.max(99)]],
     potential: [null as number | null, [Validators.min(1), Validators.max(99)]],
     gender: ['M'],
-    pace: [null as number | null, [Validators.min(1), Validators.max(99)]],
-    shooting: [null as number | null, [Validators.min(1), Validators.max(99)]],
-    passing: [null as number | null, [Validators.min(1), Validators.max(99)]],
-    dribbling: [null as number | null, [Validators.min(1), Validators.max(99)]],
-    defending: [null as number | null, [Validators.min(1), Validators.max(99)]],
-    physic: [null as number | null, [Validators.min(1), Validators.max(99)]],
+    pace: [null as number | null],
+    shooting: [null as number | null],
+    passing: [null as number | null],
+    dribbling: [null as number | null],
+    defending: [null as number | null],
+    physic: [null as number | null],
   });
 
   constructor(
@@ -149,7 +149,22 @@ export class PlayerCreateComponent {
     if (this.createForm.invalid) return;
     this.loading = true;
     this.errorMsg = '';
-    this.playersService.createPlayer(this.createForm.value as any).subscribe({
+
+    const raw = this.createForm.value;
+    const payload = {
+      ...raw,
+      age: raw.age ? Number(raw.age) : null,
+      overall: raw.overall ? Number(raw.overall) : null,
+      potential: raw.potential ? Number(raw.potential) : null,
+      pace: raw.pace ? Number(raw.pace) : null,
+      shooting: raw.shooting ? Number(raw.shooting) : null,
+      passing: raw.passing ? Number(raw.passing) : null,
+      dribbling: raw.dribbling ? Number(raw.dribbling) : null,
+      defending: raw.defending ? Number(raw.defending) : null,
+      physic: raw.physic ? Number(raw.physic) : null,
+    };
+
+    this.playersService.createPlayer(payload as any).subscribe({
       next: (player) => {
         this.router.navigate(['/players', player.id]);
       },
